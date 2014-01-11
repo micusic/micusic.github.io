@@ -1,0 +1,141 @@
+---
+layout: post
+title:  "Inversion of Control"
+date:   2013-01-08 22:04:12
+categories: tekni:k
+---
+
+#IoC
+Inversion of Control, 控制反转, 什么是控制? 我们看一个命令行程序的例子, 可能是所有人初学编程时写过的例子:
+		
+	puts 'What is your name?'
+  	name = console.gets
+	process_name(name)
+		
+  	puts 'What is your question?'
+  	question = console.gets
+  	process_question(quest)
+在这个例子中, 代码决定了什么时候问你哪个问题, 什么时候读入你的回答, 什么时候调用 _process_xxxx_ 函数处理你的输入. 掌握控制权的是代码.
+  	
+时光一晃, 来到了GUI的时代, 我们再来看下面这段用窗体实现同样功能的代码:
+  		
+  	window = Window.new()
+  			
+  	name_label = Label.new().setText("What is Your Name?")
+  	name_label.bind("FocusOut", process_name(name_label.Text))
+ 	window.add(name_label)
+  			
+  	question_label = Label.new().setText("What is Your Question?")
+  	question_label.bind("FocusOut", process_quest(name_qustion.Text))
+ 	window.add(question_label)
+  			
+  	window.show
+在这段代码中, 我们先新建了一个 _window_ , 最后 _show_ 了这个 _window_ . 在这中间, 我们对 name 和 question 做了同样的三件事情: 新建 label 并设置其让其显示对应的语句, 将其对应的 _process_xxxx_ 函数__绑定__到 label 的 FocusOut 事件上, 将 label _add_ 到 _window_ 中.
+  	
+这样一来, 我们的代码就不能决定 _process_name_ 和 _process_quest_ 的调用顺序了, 而是 _window_ 来管理各种事件及其响应函数, 并决定函数的调用时间. 通过__绑定__这个动作, 我们将控制权有代码交给了 _window_ .
+  	
+这个时候, __控制__就被__反转__了. 这种现象, 就叫做__控制反转__, __Inversion of Control__.
+
+再举一个例子, __父类__ 定义控制的流程, __子类__ 通过 __重写方法__ 或者 __实现抽象方法__ 进行功能扩展. 在 _JUnit_ 中, 框架会调用 _setUp_ 和 _tearDown_ 方法为你进行测试的准备和恢复工作, 而这些方法具体要做什么事情有你来定义. 也就是, 控制被反转了.
+
+__Inversion of Control__ 是框架与库不同的主要特征之一.
+  		
+#DI
+Dependcy injection, IoC 的一种特殊形式
+	
+"_As a result I think we need a more specific name for this pattern. Inversion of Control is too generic a term, and thus people find it confusing. As a result with a lot of discussion with various IoC advocates we settled on the name Dependency Injection._" -- Martin Fowler,《[Inversion of Control Containers and the Dependency Injection pattern](http://martinfowler.com/articles/injection.html)》
+	
+依赖注入，即组件之间的依赖关系由容器在运行期决定，形象的来说，即由容器动态的将某种依赖关系注入到组件之中。
+
+###一个 Spring IoC 的例子:
+	
+	git clone git@github.com:micusic/SpringIoC.git
+	git checkout 235127d
+	
+我们定义了一个接口 _PizzaRecipe_ 和两个实现它的类 _BaconPizzaRecipe_ 和 _ChickenPizzaRecipe_, 以及使用这个接口的 _PizzaRecipeService_ 和用户代码 _PizzaRecipeMachine_. 在 _PizzaRecipeMachine_ 中, 我们调用了 _PizzaRecipeService_ 的 _printPizzaRecipe_ 方法实现了某一种 _PizzaRecipe_ 的打印.
+	
+运行 _PizzaRecipeMachine_ , 打印出的是 _BaconPizzaRecipe_, 这是因为在 _PizzaRecipeService_ 的定义中, 我们实例化的是 _BaconPizzaRecipe_. 用户如果想要打印不同的 _PizzaRecipe_, 需要对 _PizzaRecipeService_ 的代码进行修改.
+	
+现在, 我们在代码中使用 __Spring__ 的 __IoC__. 
+		
+	git checkout 426f43a
+		
+在这次 commit 的 _PizzaRecipeService_ 中, 我们并没有实例化某一种 _PizzaRecipe_ ,而是对其增加了一个 _setter_ 方法, 供 __Spring__ 调用.  _PizzaRecipeMachine_ 中使用的 _pizzaRecipeService_ 是 _beans.xml_  中定义的, 名为  _pizzaRecipeService_ 的 bean.
+	
+运行 _PizzaRecipeMachine_ , 打印出的是 _BaconPizzaRecipe_, 这是因为在 _beans.xml_ 中, 它被写到了名为  _pizzaRecipeService_ 的 bean 的配置中
+	
+	<bean id="chickenPizzaRecipe" class="com.TW.spring.ioc.ChickenPizzaRecipe"/>
+   	<bean id="baconPizzaRecipe" class="com.TW.spring.ioc.BaconPizzaRecipe"/>
+   	<bean id="pizzaRecipeService" class="com.TW.spring.ioc.PizzaRecipeService">
+        <property name="pizzaRecipe" ref ="baconPizzaRecipe"/>
+   	</bean>
+    
+####小结
+
+使用IoC的对比:
+
+- 使用IoC之前, _pizzaRecipeService_ 依赖于接口 _PizzaRecipe_, 以及它的某一种具体实现.
+- 使用IoC之后, _pizzaRecipeService_ 只依赖于接口 _PizzaRecipe_.
+- 使用IoC之后, _pizzaRecipeService_ 使用哪种 _PizzaRecipe_, 通过读取配置文件 _bean.xml_ 进行动态设置.
+
+使用IoC的好处:
+
+- 消除应用程序对插件实现的依赖, 组件间的依赖关系减少, 极大改善了代码的可重用性.
+- 客户代码 _PizzaRecipeMachine_ 仅仅面向接口编程, 而无需知道实现类的具体名称.
+- 可以很简单的通过修改配置文件来切换具体的底层实现类.
+- 自然而然的面向接口编程, 传统编码过程中, 引入一个接口, 往往也意味着同时要引入一个Factory类, 也许还有一个额外的配置文件及其读写代码.
+- 我们的所有程序代码中（除Machine之外），并没有出现Spring中的任何组件, 可以轻松的将组件从Spring中脱离，甚至不需要任何修改
+
+###实现ioc的方法	
+	
+实际上, 实现ioc有两种选择：Dependency Injection和Service Locator. 这里主要介绍 DI.
+
+实现 DI 有3种主要方式: Constructor Injection, Setter Injection, and Interface Injection
+
+- Setter Injection
+
+	上面的例子使用的就是这种方法, 提供setter方法给Spring调用, 完成依赖注入.
+
+- Constructor Injection
+
+	这种方法是指, 框架调用类的构造函数进行依赖注入, 在配置文件中配置好构造函数的参数.
+	
+			   	<bean id="pizzaRecipeService" class="com.TW.spring.ioc.PizzaRecipeService">
+       				<constructor-arg ref="baconPizzaRecipe" />
+   				</bean>	
+
+- Interface Injection
+
+	复杂, 跳过...
+
+除此之外, 还有两种常用的方法, 都是通过注解来实现的, 使用起来更加方便. Spring提供了@autowired的方法:
+	
+	git checkout e1dc59c
+	
+在这次 commit 的 _PizzaRecipeService_ 中, 我们去掉了 _pizzaRecipe_ 的setter方法, 看起来没有任何地方会对他进行赋值. 但是, 在其定义时的注解@Autowired, 告诉了Spring这个变量的值是需要被注入进来的. Spring会在运行是的context中找到唯一一个符合其定义的bean, 并赋值给它.
+	
+运行 _PizzaRecipeMachine_ , 打印出的是 _BaconPizzaRecipe_, 这是因为在 _beans.xml_ 中, 它是唯一一个符合定义的bean.
+
+
+另外一种使用注解的方法是@Resource, 这种方法是javax提供的.
+	
+	git checkout 3bfdf5c
+	
+@Resource的使用方法和@Autowired相同, 不过注入时查找bean的原则不同. @Resource会优先查找与该变量名称相同的bean, 然后才会根据变量类型查找.
+
+运行 _PizzaRecipeMachine_ , 打印出的是 _ChickenPizzaRecipe_, 这是因为在 _beans.xml_ 中, 有一个以变量名 _pizzaRecipe_ 为 id 的 bean, 它的类为 _ChickenPizzaRecipe_, Spring 找到了它, 并将其注入了.
+
+这时, 如果我们重命名 id 为 _pizzaRecipe_ 的 bean, Spring 就会将类型相同的 _baconPizzaRecipe_ bean 注入, 打印出来的就是 _BaconPizzaRecipe_ 了.
+	
+###各方法比较:
+- Constructor Injection的优势：
+	1. “在构造期即创建一个完整、合法的对象”，对于这条Java设计原则，Constructor Injection无疑是最好的响应者。
+	* 避免了繁琐的setter方法的编写，所有依赖关系均在构造函数中设定，依赖关系集中呈现，更加易读。
+	* 由于没有setter方法，依赖关系在构造时由容器一次性设定，因此组件在被创建之后即处于相对“不变”的稳定状态，无需担心上层代码在调用过程中执行setter方法对组件依赖关系产生破坏，特别是对于Singleton模式的组件而言，这可能对整个系统产生重大的影响。
+	* 同样，由于关联关系仅在构造函数中表达，只有组件创建者需要关心组件内部的依赖关系。对调用者而言，组件中的依赖关系处于黑盒之中。对上层屏蔽不必要的信息，也为系统的层次清晰性提供了保证。
+	* 通过构造子注入，意味着我们可以在构造函数中决定依赖关系的注入顺序，对于一个大量依赖外部服务的组件而言，依赖关系的获得顺序可能非常重要，比如某个依赖关系注入的先决条件是组件的DataSource及相关资源已经被设定。
+	
+- Setter Injection的优势：
+	1. 对于习惯了传统JavaBean开发的程序员而言，通过setter方法设定依赖关系显得更加直观，更加自然。
+ 	* 如果依赖关系（或继承关系）较为复杂，那么Constructor Injection模式的构造函数也会相当庞大（我们需要在构造函数中设定所有依赖关系），此时Setter Injection模式往往更为简洁。
+	* 对于某些第三方类库而言，可能要求我们的组件必须提供一个默认的构造函数
