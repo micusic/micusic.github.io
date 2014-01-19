@@ -1,0 +1,25 @@
+---
+layout: post
+title:  "Goals with SMART"
+date:   2014-01-19 21:25:12
+categories: be_positive
+---
+在ZDYX最后一期, 大家一起做了future inspective
+
+我们分别写了3个月, 6个月, 1年和2年的目标, 然后trainer对这些目标给一些feedback
+
+期间说到了一个蛮有意思的东西
+
+	SMART原则（S=Specific、M=Measurable、A=Attainable、R=Relevant、T=Time-based）
+	
+- 'S'. 具体, 目标一定得是具体的, 明确的目标讲引出具体的做法
+- 'M'. 可衡量, 目标是否达成, 一定要有客观的衡量标准
+- 'A'. 可达到, 目标一定不能是不可能达到的
+- 'R'. 相关性, 目标与工作或生活或自己的相关性, 反应该目标的意义
+- 'T'. 基于时间, 有明确的结束时间, 以及各阶段时间 
+	
+完成不了的目标只能打击自己, 没有时间的目标会被一再拖延, 或者不能衡量的目标可能潦草结束, 或者做了一些事情但是没什么意义. 
+
+不好的目标不但没有帮助, 反而会有反作用. 以后制定目标时, 要制定好的目标, 好的目标才能帮助我们的行为.
+
+<img src="{{ site.url }}/asset/2014-01-19-SMART-image1.jpg" style="width: 750px;"/>
