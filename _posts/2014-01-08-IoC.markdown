@@ -1,7 +1,7 @@
 ---
 layout: post
 title:  "Inversion of Control"
-date:   2013-01-08 22:04:12
+date:   2014-01-08 22:04:12
 categories: tekni:k
 ---
 
