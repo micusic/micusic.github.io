@@ -19,8 +19,9 @@ categories: bizanayl
 
 能写得出来，才能证明真滴“掌握”了！
 
-1. Agile BA Practice List:
-2. Acceptance Criteria  - 验收标准
+Agile BA Practice List:
+
+2. [Acceptance Criteria  - 验收标准](/bizanayl/2015/05/14/[BAPS]Acceptance Criteria.html)
 3. Adaptive Planning  - 适应性计划
 4. As-is Process and To-be Process  - 当前流程和期望流程
 5. Business Value Chain - 业务价值链
