@@ -24,7 +24,7 @@ Agile BA Practice List:
 2. [Acceptance Criteria  - 验收标准](/bizanayl/2015/05/14/[BAPS]Acceptance Criteria.html)
 3. [Adaptive Planning  - 适应性计划](/bizanayl/2015/05/15/[BAPS]Adaptive Planning.html)
 4. [As-is Process and To-be Process  - 当前流程和期望流程](/bizanayl/2015/05/18/[BAPS]As-is Process and To-be Process.html)
-5. Business Value Chain - 业务价值链
+5. [Business Value Chain - 业务价值链](/bizanayl/2015/05/26/[BAPS]Business Value Chain.html)
 6. Business Model Canvas - 商业模式画布
 7. Business Glossary - 业务术语表
 8. Concept/Domain Modeling - 概念/领域建模
